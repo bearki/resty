@@ -133,11 +133,12 @@ func parseChallenge(input string) (*challenge, error) {
 		return nil, ErrDigestBadChallenge
 	}
 	s = strings.Trim(s[7:], ws)
-	sl := strings.Split(s, ", ")
+	sl := strings.Split(s, ",")
 	c := &challenge{}
 	var r []string
-	for i := range sl {
-		r = strings.SplitN(sl[i], "=", 2)
+	for _, v := range sl {
+		v = strings.TrimSpace(v)
+		r = strings.SplitN(v, "=", 2)
 		if len(r) != 2 {
 			return nil, ErrDigestBadChallenge
 		}
@@ -151,9 +152,9 @@ func parseChallenge(input string) (*challenge, error) {
 		case "opaque":
 			c.opaque = strings.Trim(r[1], qs)
 		case "stale":
-			c.stale = r[1]
+			c.stale = strings.Trim(r[1], qs)
 		case "algorithm":
-			c.algorithm = r[1]
+			c.algorithm = strings.Trim(r[1], qs)
 		case "qop":
 			c.qop = strings.Trim(r[1], qs)
 		case "charset":
